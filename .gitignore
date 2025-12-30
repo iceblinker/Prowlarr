@@ -1,0 +1,5 @@
+.env
+config/
+*.properties
+.DS_Store
+Thumbs.db
