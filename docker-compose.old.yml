@@ -1,0 +1,192 @@
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER:-nordvpn}
+      - VPN_TYPE=${VPN_TYPE:-openvpn}
+      - OPENVPN_USER=${OPENVPN_USER}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
+      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+      - TZ=${TZ:-Etc/UTC}
+    ports:
+      - "${PROWLARR_PORT:-9696}:9696" # Prowlarr Port
+      - "${JACKETT_PORT:-9117}:9117" # Jackett Port
+      - "${FLARESOLVERR_PORT:-8191}:8191" # FlareSolverr Port
+    restart: always
+    networks:
+      - default
+      - ai_network
+    labels:
+      - autoheal=true
+
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Etc/UTC}
+      - PROWLARR__POSTGRES__HOST=postgres
+      - PROWLARR__POSTGRES__PORT=5432
+      - PROWLARR__POSTGRES__USER=${POSTGRES_USER}
+      - PROWLARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
+      - PROWLARR__POSTGRES__MAINDB=${POSTGRES_DB}
+    volumes:
+      - ./config:/config
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    depends_on:
+      - gluetun
+      - postgres
+    network_mode: service:gluetun
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:9696/ping || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - autoheal=true
+
+  jackett:
+    build:
+      context: ./Jackett
+      dockerfile: Dockerfile
+    image: jackett-custom:net9
+    container_name: jackett
+    environment:
+      - TZ=${TZ:-Etc/UTC}
+      - DOTNET_gcServer=1
+    volumes:
+      - ./config/jackett:/config
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+    network_mode: service:gluetun
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -q --spider http://localhost:9117/UI/Dashboard || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - autoheal=true
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=${TZ:-Etc/UTC}
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+    network_mode: service:gluetun
+    healthcheck:
+      test: [ "CMD-SHELL", "wget -q --spider http://localhost:8191/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - autoheal=true
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: prowlarr-postgres
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - default
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - autoheal=true
+
+  autoheal:
+    image: willfarrell/autoheal
+    container_name: autoheal
+    environment:
+      - AUTOHEAL_CONTAINER_LABEL=all
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: always
+
+  exportarr:
+    image: ghcr.io/onedr0p/exportarr:v2.0.0
+    container_name: exportarr
+    command: prowlarr
+    environment:
+      - PORT=9707
+      - URL=http://gluetun:9696
+      - APIKEY=${PROWLARR_API_KEY}
+      - API_KEY=${PROWLARR_API_KEY}
+      - PROWLARR_API_KEY=${PROWLARR_API_KEY}
+    restart: unless-stopped
+    depends_on:
+      - gluetun
+      - prowlarr
+    networks:
+      - default
+      - ai_network
+    labels:
+      - autoheal=true
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    # volumes:
+    #   - ./config:/etc/prometheus-config
+    #   - prometheus_data:/prometheus
+    # command:
+    #   - '--config.file=/etc/prometheus-config/prometheus.yml'
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    networks:
+      - default
+    labels:
+      - autoheal=true
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    networks:
+      - default
+    labels:
+      - autoheal=true
+
+networks:
+  ai_network:
+    external: true
+
+volumes:
+  postgres_data:
+  prometheus_data:
+  grafana_data:

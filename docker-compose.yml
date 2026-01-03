@@ -1,63 +1,283 @@
 services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      - VPN_SERVICE_PROVIDER=${VPN_SERVICE_PROVIDER:-nordvpn}
+      - VPN_TYPE=${VPN_TYPE:-openvpn}
+      - OPENVPN_USER=${OPENVPN_USER}
+      - OPENVPN_PASSWORD=${OPENVPN_PASSWORD}
+      - SERVER_COUNTRIES=${SERVER_COUNTRIES}
+      - TZ=${TZ:-Etc/UTC}
+    ports:
+      - "${PROWLARR_PORT:-9696}:9696" # Prowlarr
+      - "8191:8191" # FlareSolverr
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # For autoheal if needed
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    networks:
+      - default
+      - ai_network
+    labels:
+      - autoheal=true
+
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
+    network_mode: service:gluetun
     environment:
       - PUID=${PUID:-1000}
       - PGID=${PGID:-1000}
       - TZ=${TZ:-Etc/UTC}
-      - PROWLARR__POSTGRES__HOST=postgres
-      - PROWLARR__POSTGRES__PORT=5432
-      - PROWLARR__POSTGRES__USER=${POSTGRES_USER}
-      - PROWLARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
-      - PROWLARR__POSTGRES__MAINDB=${POSTGRES_DB}
+      - PROWLARR_API_KEY=${PROWLARR_API_KEY}
     volumes:
-      - ./config:/config
-    ports:
-      - "${PROWLARR_PORT:-9696}:9696"
-    restart: unless-stopped
+      - ./config/prowlarr:/config
     deploy:
       resources:
         limits:
           memory: 512M
+    restart: unless-stopped
     depends_on:
-      - flaresolverr
-      - postgres
+      - gluetun
+
+  # --- Radarr Instances ---
+  radarr-en:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr-en
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Etc/UTC}
+      - RADARR__AUTH__APIKEY=${RADARR_API_KEY}
+      - RADARR__POSTGRES__HOST=postgres
+      - RADARR__POSTGRES__PORT=5432
+      - RADARR__POSTGRES__USER=${POSTGRES_USER}
+      - RADARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
+      - RADARR__POSTGRES__MAINDB=radarr_en
+    volumes:
+      - ./config/radarr-en:/config
+      - ./media:/media
+    ports:
+      - "7878:7878"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    restart: unless-stopped
+    networks:
+      - ai_network
+      - default
+
+  radarr-es:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr-es
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Etc/UTC}
+      - RADARR__AUTH__APIKEY=${RADARR_API_KEY}
+      - RADARR__POSTGRES__HOST=postgres
+      - RADARR__POSTGRES__PORT=5432
+      - RADARR__POSTGRES__USER=${POSTGRES_USER}
+      - RADARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
+      - RADARR__POSTGRES__MAINDB=radarr_es
+    volumes:
+      - ./config/radarr-es:/config
+      - ./media:/media
+    ports:
+      - "7879:7878"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    restart: unless-stopped
+    networks:
+      - ai_network
+      - default
+
+  radarr-it:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr-it
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Etc/UTC}
+      - RADARR__AUTH__APIKEY=${RADARR_API_KEY}
+      - RADARR__POSTGRES__HOST=postgres
+      - RADARR__POSTGRES__PORT=5432
+      - RADARR__POSTGRES__USER=${POSTGRES_USER}
+      - RADARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
+      - RADARR__POSTGRES__MAINDB=radarr_it
+    volumes:
+      - ./config/radarr-it:/config
+      - ./media:/media
+    ports:
+      - "7880:7878"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    restart: unless-stopped
+    networks:
+      - ai_network
+      - default
+
+  # --- Sonarr Instances ---
+  sonarr-en:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr-en
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Etc/UTC}
+      - SONARR__AUTH__APIKEY=${SONARR_API_KEY}
+      - SONARR__POSTGRES__HOST=postgres
+      - SONARR__POSTGRES__PORT=5432
+      - SONARR__POSTGRES__USER=${POSTGRES_USER}
+      - SONARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
+      - SONARR__POSTGRES__MAINDB=sonarr_en
+    volumes:
+      - ./config/sonarr-en:/config
+      - ./media:/media
+    ports:
+      - "8989:8989"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    restart: unless-stopped
+    networks:
+      - ai_network
+      - default
+
+  sonarr-es:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr-es
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Etc/UTC}
+      - SONARR__AUTH__APIKEY=${SONARR_API_KEY}
+      - SONARR__POSTGRES__HOST=postgres
+      - SONARR__POSTGRES__PORT=5432
+      - SONARR__POSTGRES__USER=${POSTGRES_USER}
+      - SONARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
+      - SONARR__POSTGRES__MAINDB=sonarr_es
+    volumes:
+      - ./config/sonarr-es:/config
+      - ./media:/media
+    ports:
+      - "8990:8989"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    restart: unless-stopped
+    networks:
+      - ai_network
+      - default
+
+  sonarr-it:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr-it
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Etc/UTC}
+      - SONARR__AUTH__APIKEY=${SONARR_API_KEY}
+      - SONARR__POSTGRES__HOST=postgres
+      - SONARR__POSTGRES__PORT=5432
+      - SONARR__POSTGRES__USER=${POSTGRES_USER}
+      - SONARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
+      - SONARR__POSTGRES__MAINDB=sonarr_it
+    volumes:
+      - ./config/sonarr-it:/config
+      - ./media:/media
+    ports:
+      - "8991:8989"
+    deploy:
+      resources:
+        limits:
+          memory: 768M
+    restart: unless-stopped
+    networks:
+      - ai_network
+      - default
+
+  # --- Helpers ---
+  recyclarr:
+    image: recyclarr/recyclarr
+    container_name: recyclarr
+    user: 1000:1000
+    volumes:
+      - ./config/recyclarr:/config
+    environment:
+      - TZ=${TZ:-Etc/UTC}
+      - RADARR_API_KEY=${RADARR_API_KEY}
+      - SONARR_API_KEY=${SONARR_API_KEY}
     networks:
       - default
       - ai_network
-    healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:9696/ping || exit 1" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    labels:
-      - autoheal=true
+    depends_on:
+      - gluetun
+    deploy:
+      resources:
+        limits:
+          memory: 128M
 
   flaresolverr:
     image: ghcr.io/flaresolverr/flaresolverr:latest
     container_name: flaresolverr
+    network_mode: service:gluetun
     environment:
       - LOG_LEVEL=info
-      - LOG_HTML=false
-      - CAPTCHA_SOLVER=none
-      - TZ=${TZ:-Etc/UTC}
-    ports:
-      - "${FLARESOLVERR_PORT:-8191}:8191"
-    restart: unless-stopped
     deploy:
       resources:
         limits:
           memory: 512M
+    restart: unless-stopped
+
+  # --- Monitoring & Dashboard ---
+  uptime-kuma:
+    image: louislam/uptime-kuma:1
+    container_name: uptime-kuma
+    volumes:
+      - ./config/uptime-kuma:/app/data
+    ports:
+      - "3001:3001"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     networks:
       - default
-    healthcheck:
-      test: [ "CMD-SHELL", "wget -q --spider http://localhost:8191/health || exit 1" ]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    labels:
-      - autoheal=true
+      - ai_network
+
+  homepage:
+    image: ghcr.io/gethomepage/homepage:latest
+    container_name: homepage
+    volumes:
+      - ./config/homepage:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "3050:3000"
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    networks:
+      - default
+      - ai_network
 
   postgres:
     image: postgres:16-alpine
@@ -68,25 +288,22 @@ services:
       - POSTGRES_DB=${POSTGRES_DB}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
     restart: unless-stopped
     networks:
       - default
+      - ai_network
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER}" ]
       interval: 10s
       timeout: 5s
       retries: 5
+    deploy:
+      resources:
+        limits:
+          memory: 256M
     labels:
       - autoheal=true
-
-  autoheal:
-    image: willfarrell/autoheal
-    container_name: autoheal
-    environment:
-      - AUTOHEAL_CONTAINER_LABEL=all
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: always
 
 networks:
   ai_network:

@@ -3,3 +3,8 @@ config/
 *.properties
 .DS_Store
 Thumbs.db
+
+media/
+downloads/
+*.log
+*.pid
