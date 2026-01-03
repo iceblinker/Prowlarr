@@ -252,7 +252,7 @@ services:
     volumes:
       - ./config/uptime-kuma:/app/data
     ports:
-      - "3001:3001"
+      - "3005:3001"
     restart: always
     deploy:
       resources:
