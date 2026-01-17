@@ -63,6 +63,7 @@ services:
       - RADARR__POSTGRES__USER=${POSTGRES_USER}
       - RADARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
       - RADARR__POSTGRES__MAINDB=radarr_en
+      - RADARR__POSTGRES__LOGDB=radarr_en_log
     volumes:
       - ./config/radarr-en:/config
       - ./media:/media
@@ -90,6 +91,7 @@ services:
       - RADARR__POSTGRES__USER=${POSTGRES_USER}
       - RADARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
       - RADARR__POSTGRES__MAINDB=radarr_es
+      - RADARR__POSTGRES__LOGDB=radarr_es_log
     volumes:
       - ./config/radarr-es:/config
       - ./media:/media
@@ -117,6 +119,7 @@ services:
       - RADARR__POSTGRES__USER=${POSTGRES_USER}
       - RADARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
       - RADARR__POSTGRES__MAINDB=radarr_it
+      - RADARR__POSTGRES__LOGDB=radarr_it_log
     volumes:
       - ./config/radarr-it:/config
       - ./media:/media
@@ -145,6 +148,7 @@ services:
       - SONARR__POSTGRES__USER=${POSTGRES_USER}
       - SONARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
       - SONARR__POSTGRES__MAINDB=sonarr_en
+      - SONARR__POSTGRES__LOGDB=sonarr_en_log
     volumes:
       - ./config/sonarr-en:/config
       - ./media:/media
@@ -172,6 +176,7 @@ services:
       - SONARR__POSTGRES__USER=${POSTGRES_USER}
       - SONARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
       - SONARR__POSTGRES__MAINDB=sonarr_es
+      - SONARR__POSTGRES__LOGDB=sonarr_es_log
     volumes:
       - ./config/sonarr-es:/config
       - ./media:/media
@@ -199,6 +204,7 @@ services:
       - SONARR__POSTGRES__USER=${POSTGRES_USER}
       - SONARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
       - SONARR__POSTGRES__MAINDB=sonarr_it
+      - SONARR__POSTGRES__LOGDB=sonarr_it_log
     volumes:
       - ./config/sonarr-it:/config
       - ./media:/media

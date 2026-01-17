@@ -1,0 +1,26 @@
+
+--- Prowlarr Indexer Availability Report ---
+
+### Italian
+- [x] **ItaTorrents**: Found as 'ItaTorrents' (torrent, private)
+- [x] **ShareIsland**: Found as 'Shareisland (API)' (torrent, private)
+- [x] **ArabaFenice**: Found as 'ArabaFenice' (torrent, private)
+- [x] **1337x**: Found as '1337x' (torrent, public)
+- [ ] **Badass Torrents**: NOT FOUND in Prowlarr definitions.
+### Spanish
+- [ ] **HD-Spain**: NOT FOUND in Prowlarr definitions.
+- [x] **PuntoTorrent**: Found as 'PuntoTorrent' (torrent, private)
+- [x] **HD-Olimpo**: Found as 'HD-Olimpo (API)' (torrent, private)
+- [ ] **DonTorrent**: NOT FOUND in Prowlarr definitions.
+- [ ] **Elite Torrent**: NOT FOUND in Prowlarr definitions.
+### Latino
+- [x] **Lat-Team**: Found as 'Lat-Team (API)' (torrent, private)
+- [x] **ChileBT**: Found as 'ChileBT (API)' (torrent, private)
+- [ ] **TorrentLandia**: NOT FOUND in Prowlarr definitions.
+- [ ] **Identi**: NOT FOUND in Prowlarr definitions.
+- [ ] **DivxTotal**: NOT FOUND in Prowlarr definitions.
+- [ ] **DescargasDD**: NOT FOUND in Prowlarr definitions.
+### Usenet
+- [x] **NZBGeek**: Found as 'NZBgeek' (usenet, private)
+- [x] **DrunkenSlug**: Found as 'DrunkenSlug' (usenet, private)
+- [ ] **nzb.su**: NOT FOUND in Prowlarr definitions.

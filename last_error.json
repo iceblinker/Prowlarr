@@ -1,0 +1,8 @@
+[
+  {
+    "isWarning": false,
+    "propertyName": "BaseUrl",
+    "errorMessage": "Unable to complete application test, cannot connect to Radarr. Connection refused (radarr-it:7878)",
+    "severity": "error"
+  }
+]

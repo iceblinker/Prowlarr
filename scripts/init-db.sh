@@ -14,10 +14,16 @@ EOSQL
 
 # Create databases for God Mode instances
 create_db "radarr_en"
+create_db "radarr_en_log"
 create_db "radarr_es"
+create_db "radarr_es_log"
 create_db "radarr_it"
+create_db "radarr_it_log"
 create_db "sonarr_en"
+create_db "sonarr_en_log"
 create_db "sonarr_es"
+create_db "sonarr_es_log"
 create_db "sonarr_it"
+create_db "sonarr_it_log"
 # Prowlarr DB is already default or created via its own vars, but good to have explicit
 create_db "prowlarr"
