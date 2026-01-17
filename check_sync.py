@@ -1,8 +1,23 @@
+import os
 import requests
 import json
 
+# Manual .env parser
+def load_env_manual():
+    if os.path.exists(".env"):
+        with open(".env", "r") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                if "=" in line:
+                    key, value = line.split("=", 1)
+                    os.environ[key.strip()] = value.strip()
+
+load_env_manual()
+
 PROWLARR_URL = "http://localhost:9696"
-PROWLARR_API_KEY = "88c41e7efe9b4f71b7793711c79ec562"
+PROWLARR_API_KEY = os.getenv("PROWLARR_API_KEY", "88c41e7efe9b4f71b7793711c79ec562")
 HEADERS = {
     "X-Api-Key": PROWLARR_API_KEY,
     "Content-Type": "application/json"
