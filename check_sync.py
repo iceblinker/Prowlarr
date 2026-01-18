@@ -34,7 +34,7 @@ def check_sync():
         geek_indexer = next((i for i in indexers if 'nzbgeek' in i['name'].lower()), None)
         
         if geek_indexer:
-            print(f"[OK] Found Indexer: {geek_indexer['name']}")
+            print(f"[OK] Found Indexer: {geek_indexer['name']} (Tags: {geek_indexer.get('tags', [])})")
         else:
             print("[FAIL] NZBGeek indexer NOT found in Prowlarr.")
     except Exception as e:
