@@ -15,7 +15,7 @@ services:
       - FIREWALL_OUTBOUND_SUBNETS=172.0.0.0/8,10.0.0.0/8,192.168.0.0/16
       - TZ=${TZ:-Etc/UTC}
     ports:
-      - "${PROWLARR_PORT:-9696}:9696" # Prowlarr
+      # - "${PROWLARR_PORT:-9696}:9696" # Prowlarr - Moved to Prowlarr container directly
       - "8191:8191" # FlareSolverr
     restart: always
     volumes:
@@ -33,7 +33,12 @@ services:
   prowlarr:
     image: lscr.io/linuxserver/prowlarr:latest
     container_name: prowlarr
-    network_mode: service:gluetun
+    # network_mode: service:gluetun
+    ports:
+      - "${PROWLARR_PORT:-9696}:9696"
+    networks:
+      - default
+      - ai_network
     environment:
       - PUID=${PUID:-1000}
       - PGID=${PGID:-1000}
