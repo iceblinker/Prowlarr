@@ -11,8 +11,9 @@ radarr:
     quality_profiles:
       - name: HD-1080p
     custom_formats:
-      - trash_id: 382417e086438f2197607a7431e67cc0 # Language: Spanish
-        quality_profiles:
+      - trash_ids:
+          - 382417e086438f2197607a7431e67cc0 # Language: Spanish
+        assign_scores_to:
           - name: HD-1080p
             score: 1000
 
@@ -22,8 +23,9 @@ radarr:
     quality_profiles:
       - name: HD-1080p
     custom_formats:
-      - trash_id: 8527a42168eb2a29486df52ee5204482 # Language: Italian
-        quality_profiles:
+      - trash_ids:
+          - 8527a42168eb2a29486df52ee5204482 # Language: Italian
+        assign_scores_to:
           - name: HD-1080p
             score: 1000
 
@@ -40,8 +42,9 @@ sonarr:
     quality_profiles:
       - name: WEB-1080p
     custom_formats:
-      - trash_id: 382417e086438f2197607a7431e67cc0 # Language: Spanish
-        quality_profiles:
+      - trash_ids:
+          - 382417e086438f2197607a7431e67cc0 # Language: Spanish
+        assign_scores_to:
           - name: WEB-1080p
             score: 10000 # High score for Sonarr v4 prioritization
 
@@ -51,7 +54,8 @@ sonarr:
     quality_profiles:
       - name: WEB-1080p
     custom_formats:
-      - trash_id: 8527a42168eb2a29486df52ee5204482 # Language: Italian
-        quality_profiles:
+      - trash_ids:
+          - 8527a42168eb2a29486df52ee5204482 # Language: Italian
+        assign_scores_to:
           - name: WEB-1080p
             score: 10000 # High score for Sonarr v4 prioritization
