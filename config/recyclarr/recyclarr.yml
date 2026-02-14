@@ -1,0 +1,57 @@
+radarr:
+  radarr-en:
+    base_url: http://radarr-en:7878
+    api_key: !env_var RADARR_API_KEY
+    quality_profiles:
+      - name: HD-1080p
+
+  radarr-es:
+    base_url: http://radarr-es:7878
+    api_key: !env_var RADARR_API_KEY
+    quality_profiles:
+      - name: HD-1080p
+    custom_formats:
+      - trash_id: 382417e086438f2197607a7431e67cc0 # Language: Spanish
+        quality_profiles:
+          - name: HD-1080p
+            score: 1000
+
+  radarr-it:
+    base_url: http://radarr-it:7878
+    api_key: !env_var RADARR_API_KEY
+    quality_profiles:
+      - name: HD-1080p
+    custom_formats:
+      - trash_id: 8527a42168eb2a29486df52ee5204482 # Language: Italian
+        quality_profiles:
+          - name: HD-1080p
+            score: 1000
+
+sonarr:
+  sonarr-en:
+    base_url: http://sonarr-en:8989
+    api_key: !env_var SONARR_API_KEY
+    quality_profiles:
+      - name: WEB-1080p
+
+  sonarr-es:
+    base_url: http://sonarr-es:8989
+    api_key: !env_var SONARR_API_KEY
+    quality_profiles:
+      - name: WEB-1080p
+    custom_formats:
+      - trash_id: 382417e086438f2197607a7431e67cc0 # Language: Spanish
+        quality_profiles:
+          - name: WEB-1080p
+            score: 10000 # High score for Sonarr v4 prioritization
+
+  sonarr-it:
+    base_url: http://sonarr-it:8989
+    api_key: !env_var SONARR_API_KEY
+    quality_profiles:
+      - name: WEB-1080p
+    custom_formats:
+      - trash_id: 8527a42168eb2a29486df52ee5204482 # Language: Italian
+        quality_profiles:
+          - name: WEB-1080p
+            score: 10000 # High score for Sonarr v4 prioritization
