@@ -11,6 +11,20 @@ radarr:
           - name: WEBDL-1080p
           - name: WEBRip-1080p
           - name: Bluray-1080p
+    custom_formats:
+      - trash_ids:
+          - 6d0d8de7b57e35518ac0308b0ddf404e # Dolby Vision
+          - 3497799d29a085e2ac2df9d468413c94 # HDR10
+          - a3d82cbef5039f8d295478d28a887159 # HDR10+
+        assign_scores_to:
+          - name: HD-1080p
+            score: 500
+      - trash_ids:
+          - 496f355514737f7d83bf7aa4d24f8169 # TrueHD ATMOS
+          - 2f22d89048b01681dde8afe203bf2e95 # DTS X
+        assign_scores_to:
+          - name: HD-1080p
+            score: 500
 
   radarr-es:
     base_url: http://radarr-es:7878
@@ -30,6 +44,13 @@ radarr:
         assign_scores_to:
           - name: HD-1080p
             score: 1000
+      - trash_ids:
+          - 6d0d8de7b57e35518ac0308b0ddf404e # Dolby Vision
+          - 3497799d29a085e2ac2df9d468413c94 # HDR10
+          - 496f355514737f7d83bf7aa4d24f8169 # TrueHD ATMOS
+        assign_scores_to:
+          - name: HD-1080p
+            score: 500
 
   radarr-it:
     base_url: http://radarr-it:7878
@@ -49,6 +70,13 @@ radarr:
         assign_scores_to:
           - name: HD-1080p
             score: 1000
+      - trash_ids:
+          - 6d0d8de7b57e35518ac0308b0ddf404e # Dolby Vision
+          - 3497799d29a085e2ac2df9d468413c94 # HDR10
+          - 496f355514737f7d83bf7aa4d24f8169 # TrueHD ATMOS
+        assign_scores_to:
+          - name: HD-1080p
+            score: 500
 
 sonarr:
   sonarr-en:
