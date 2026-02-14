@@ -314,7 +314,7 @@ services:
       - default
       - ai_network
 
-  postgres:
+  prowlarr-postgres:
     image: postgres:16-alpine
     container_name: prowlarr-postgres
     environment:
