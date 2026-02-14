@@ -25,5 +25,6 @@ create_db "sonarr_es"
 create_db "sonarr_es_log"
 create_db "sonarr_it"
 create_db "sonarr_it_log"
-# Prowlarr DB is already default or created via its own vars, but good to have explicit
-create_db "prowlarr"
+# Prowlarr Databases
+create_db "prowlarr_main"
+create_db "prowlarr_log"

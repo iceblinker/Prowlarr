@@ -39,17 +39,42 @@ services:
     # networks:
     #   - default
     #   - ai_network
+    healthcheck:
+      test: curl -f http://localhost:9696/health || exit 1
+      interval: 1m
+      retries: 3
+      start_period: 10s
+      timeout: 5s
     environment:
       - PUID=${PUID:-1000}
       - PGID=${PGID:-1000}
       - TZ=${TZ:-Etc/UTC}
       - PROWLARR_API_KEY=${PROWLARR_API_KEY}
+      - PROWLARR__POSTGRES__HOST=prowlarr-postgres
+      - PROWLARR__POSTGRES__PORT=5432
+      - PROWLARR__POSTGRES__USER=${POSTGRES_USER}
+      - PROWLARR__POSTGRES__PASSWORD=${POSTGRES_PASSWORD}
+      - PROWLARR__POSTGRES__MAINDB=prowlarr_main
+      - PROWLARR__POSTGRES__LOGDB=prowlarr_log
     volumes:
       - ./config/prowlarr:/config
     deploy:
       resources:
         limits:
           memory: 512M
+    restart: unless-stopped
+
+  nzbhydra:
+    image: hotio/nzbhydra2
+    container_name: nzbhydra
+    environment:
+      - PUID=${PUID:-1000}
+      - PGID=${PGID:-1000}
+      - TZ=${TZ:-Etc/UTC}
+    volumes:
+      - ./config/nzbhydra:/config
+    ports:
+      - "5076:5076"
     restart: unless-stopped
     depends_on:
       - gluetun
@@ -274,22 +299,22 @@ services:
       - default
       - ai_network
 
-  homepage:
-    image: ghcr.io/gethomepage/homepage:latest
-    container_name: homepage
-    volumes:
-      - ./config/homepage:/app/config
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    ports:
-      - "3050:3000"
-    restart: always
-    deploy:
-      resources:
-        limits:
-          memory: 256M
-    networks:
-      - default
-      - ai_network
+#  homepage:
+#    image: ghcr.io/gethomepage/homepage:latest
+#    container_name: homepage
+#    volumes:
+#      - ./config/homepage:/app/config
+#      - /var/run/docker.sock:/var/run/docker.sock:ro
+#    ports:
+#      - "3050:3000"
+#    restart: always
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 256M
+#    networks:
+#      - default
+#      - ai_network
 
   postgres:
     image: postgres:16-alpine
@@ -318,25 +343,31 @@ services:
       - autoheal=true
 
   # --- NZBDav for Usenet Streaming ---
-  nzbdav:
-    image: nzbdav/nzbdav:alpha
-    container_name: nzbdav
-    environment:
-      - PUID=${PUID:-1000}
-      - PGID=${PGID:-1000}
-      - TZ=${TZ:-Etc/UTC}
-    volumes:
-      - ./config/nzbdav:/config
-    ports:
-      - "3010:3000"
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-    restart: unless-stopped
-    networks:
-      - default
-      - ai_network
+#  nzbdav:
+#    image: nzbdav/nzbdav:latest
+#    container_name: nzbdav
+#    healthcheck:
+#      test: curl -f http://localhost:3000/health || exit 1
+#      interval: 1m
+#      retries: 3
+#      start_period: 5s
+#      timeout: 5s
+#    environment:
+#      - PUID=${PUID:-1000}
+#      - PGID=${PGID:-1000}
+#      - TZ=${TZ:-Etc/UTC}
+#    volumes:
+#      - ./config/nzbdav:/config
+#    ports:
+#      - "3010:3000"
+#    deploy:
+#      resources:
+#        limits:
+#          memory: 512M
+#    restart: unless-stopped
+#    networks:
+#      - default
+#      - ai_network
 
 networks:
   ai_network:
