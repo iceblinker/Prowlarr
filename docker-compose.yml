@@ -63,7 +63,7 @@ services:
       - prowlarr-postgres
 
   nzbhydra:
-    image: hotio/nzbhydra2
+    image: lscr.io/linuxserver/hydra2:latest
     container_name: nzbhydra
     environment:
       - PUID=${PUID:-1000}
