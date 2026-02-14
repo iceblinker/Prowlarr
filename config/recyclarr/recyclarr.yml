@@ -8,9 +8,9 @@ radarr:
           allowed: true
           until_quality: WEBDL-1080p
         qualities:
-          - WEBDL-1080p
-          - WEBRip-1080p
-          - Bluray-1080p
+          - name: WEBDL-1080p
+          - name: WEBRip-1080p
+          - name: Bluray-1080p
 
   radarr-es:
     base_url: http://radarr-es:7878
@@ -21,9 +21,9 @@ radarr:
           allowed: true
           until_quality: WEBDL-1080p
         qualities:
-          - WEBDL-1080p
-          - WEBRip-1080p
-          - Bluray-1080p
+          - name: WEBDL-1080p
+          - name: WEBRip-1080p
+          - name: Bluray-1080p
     custom_formats:
       - trash_ids:
           - 382417e086438f2197607a7431e67cc0 # Language: Spanish
@@ -40,9 +40,9 @@ radarr:
           allowed: true
           until_quality: WEBDL-1080p
         qualities:
-          - WEBDL-1080p
-          - WEBRip-1080p
-          - Bluray-1080p
+          - name: WEBDL-1080p
+          - name: WEBRip-1080p
+          - name: Bluray-1080p
     custom_formats:
       - trash_ids:
           - 8527a42168eb2a29486df52ee5204482 # Language: Italian
@@ -60,9 +60,9 @@ sonarr:
           allowed: true
           until_quality: WEBDL-1080p
         qualities:
-          - WEBDL-1080p
-          - WEBRip-1080p
-          - Bluray-1080p
+          - name: WEBDL-1080p
+          - name: WEBRip-1080p
+          - name: Bluray-1080p
 
   sonarr-es:
     base_url: http://sonarr-es:8989
@@ -73,9 +73,9 @@ sonarr:
           allowed: true
           until_quality: WEBDL-1080p
         qualities:
-          - WEBDL-1080p
-          - WEBRip-1080p
-          - Bluray-1080p
+          - name: WEBDL-1080p
+          - name: WEBRip-1080p
+          - name: Bluray-1080p
 
   sonarr-it:
     base_url: http://sonarr-it:8989
@@ -86,6 +86,6 @@ sonarr:
           allowed: true
           until_quality: WEBDL-1080p
         qualities:
-          - WEBDL-1080p
-          - WEBRip-1080p
-          - Bluray-1080p
+          - name: WEBDL-1080p
+          - name: WEBRip-1080p
+          - name: Bluray-1080p
